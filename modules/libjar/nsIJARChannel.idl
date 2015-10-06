@@ -1,0 +1,43 @@
+/* -*- Mode: IDL; tab-width: 4; indent-tabs-mode: nil; c-basic-offset: 4 -*- */
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/. */
+
+#include "nsIChannel.idl"
+
+interface nsIFile;
+interface nsIZipEntry;
+
+[scriptable, builtinclass, uuid(1adea16e-aa6c-4201-8f71-e9ff0acfb52e)]
+interface nsIJARChannel : nsIChannel
+{
+    /**
+     * Returns TRUE if the JAR file is not safe (if the content type reported
+     * by the server for a remote JAR is not of an expected type).  Scripting,
+     * redirects, and plugins should be disabled when loading from this
+     * channel.
+     */
+    [infallible] readonly attribute boolean isUnsafe;
+
+    /**
+     * Forces the uri to be a app:// uri.
+     */
+    void setAppURI(in nsIURI uri);
+
+    /**
+     * Returns the JAR file.  May be null if the jar is remote.
+     */
+    readonly attribute nsIFile jarFile;
+
+    /**
+     * Returns the zip entry if the file is synchronously accessible.
+     * This will work even without opening the channel.
+     */
+    readonly attribute nsIZipEntry zipEntry;
+
+    /**
+     * Force the channel to skip any chack for possible interception and
+     * proceed immediately to the network.
+     */
+    void forceNoIntercept();
+};
